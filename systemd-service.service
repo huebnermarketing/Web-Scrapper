@@ -1,0 +1,19 @@
+# Systemd Service Configuration for Web Content Scraper
+# Place this file at: /etc/systemd/system/web-scraper.service
+
+[Unit]
+Description=Web Content Scraper
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/web-scraper
+Environment="PATH=/var/www/web-scraper/venv/bin"
+ExecStart=/var/www/web-scraper/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:8089 wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
