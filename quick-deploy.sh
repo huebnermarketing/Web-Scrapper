@@ -47,7 +47,7 @@ User=www-data
 Group=www-data
 WorkingDirectory=/var/www/web-scraper
 Environment="PATH=/var/www/web-scraper/venv/bin"
-ExecStart=/var/www/web-scraper/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:8089 wsgi:application
+ExecStart=/var/www/web-scraper/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:8077 wsgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
 Restart=always
 
@@ -63,7 +63,7 @@ server {
     server_name _;
 
     location / {
-        proxy_pass http://127.0.0.1:8089;
+        proxy_pass http://127.0.0.1:8077;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

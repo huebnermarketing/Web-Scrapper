@@ -31,7 +31,7 @@ sudo apt install build-essential libxml2-dev libxslt1-dev zlib1g-dev libffi-dev 
 ### 2.1 Create Application Directory
 ```bash
 sudo mkdir -p /var/www/web-scraper
-sudo chown $USER:$USER /var/www/web-scraper
+sudo chown ubuntu:www-data /var/www/web-scraper
 cd /var/www/web-scraper
 ```
 
@@ -51,7 +51,7 @@ pip install -r requirements.txt
 ### 2.4 Test Application
 ```bash
 python app.py
-# Test on http://your-server-ip:8089
+# Test on http://your-server-ip:8077
 # Press Ctrl+C to stop
 ```
 
@@ -68,7 +68,7 @@ if __name__ == '__main__':
     # Production configuration
     app.run(
         host='127.0.0.1',
-        port=8089,
+        port=8077,  
         debug=False,
         threaded=True
     )
@@ -110,9 +110,9 @@ After=network.target
 [Service]
 User=www-data
 Group=www-data
-WorkingDirectory=/var/www/web-scraper
-Environment="PATH=/var/www/web-scraper/venv/bin"
-ExecStart=/var/www/web-scraper/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:8089 wsgi:application
+WorkingDirectory=/var/www/web-scraper/Web-Scrapper
+Environment="PATH=/var/www/web-scraper/Web-Scrapper/.venv/bin"
+ExecStart=/var/www/web-scraper/Web-Scrapper/.venv/bin/gunicorn --workers 3 --bind 127.0.0.1:8077 wsgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
 Restart=always
 
@@ -136,7 +136,7 @@ Create `/etc/nginx/sites-available/web-scraper`:
 ```nginx
 server {
     listen 80;
-    server_name your-domain.com www.your-domain.com;  # Replace with your domain or IP
+    server_name scrapper.wliq.ai;  # Replace with your domain or IP
 
     # Security headers
     add_header X-Frame-Options "SAMEORIGIN" always;
@@ -150,7 +150,7 @@ server {
     limit_req zone=api burst=20 nodelay;
 
     location / {
-        proxy_pass http://127.0.0.1:8089;
+        proxy_pass http://127.0.0.1:8077;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -164,7 +164,7 @@ server {
 
     # Static files (if any)
     location /static {
-        alias /var/www/web-scraper/static;
+        alias /var/www/web-scraper/Web-Scrapper/static;
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
@@ -261,7 +261,7 @@ User=www-data
 Group=www-data
 WorkingDirectory=/var/www/web-scraper
 Environment="PATH=/var/www/web-scraper/venv/bin"
-ExecStart=/var/www/web-scraper/venv/bin/gunicorn --workers 4 --worker-class gevent --worker-connections 1000 --bind 127.0.0.1:8089 wsgi:application
+ExecStart=/var/www/web-scraper/venv/bin/gunicorn --workers 4 --worker-class gevent --worker-connections 1000 --bind 127.0.0.1:8077 wsgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
 Restart=always
 RestartSec=3
@@ -325,8 +325,8 @@ sudo crontab -e
 
 4. **Port conflicts:**
    ```bash
-   sudo netstat -tlnp | grep :8089
-   sudo lsof -i :8089
+   sudo netstat -tlnp | grep :8077
+   sudo lsof -i :8077
    ```
 
 ## Security Checklist

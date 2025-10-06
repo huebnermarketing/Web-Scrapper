@@ -26,7 +26,7 @@ A simple and fast web application that scrapes content from any website and allo
    python app.py
    ```
 
-2. **Open your browser** and go to: `http://localhost:8089`
+2. **Open your browser** and go to: `http://localhost:8077`
 
 3. **Enter a URL** of any website you want to scrape
 
