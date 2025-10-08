@@ -146,13 +146,54 @@
             box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
         }
 
-        .info {
+        .download-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
             margin-top: 20px;
-            padding: 15px;
+        }
+
+        .word-btn {
+            background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
+        }
+
+        .word-btn:hover {
+            box-shadow: 0 10px 20px rgba(0, 120, 212, 0.3);
+        }
+
+        .info {
+            margin-top: 30px;
+            padding: 20px;
             background: #e3f2fd;
             border-radius: 10px;
             color: #1565c0;
             font-size: 14px;
+            text-align: left;
+        }
+
+        .info strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .info ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .info li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .info code {
+            background: rgba(21, 101, 192, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
         }
 
         @media (max-width: 600px) {
@@ -162,6 +203,25 @@
             
             h1 {
                 font-size: 2em;
+            }
+
+            .info {
+                padding: 15px;
+                font-size: 13px;
+            }
+
+            .info strong {
+                font-size: 15px;
+            }
+
+            .download-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .download-btn {
+                width: 100%;
+                margin-top: 0;
             }
         }
     </style>
@@ -188,7 +248,10 @@
             <h3>✅ Content Scraped Successfully!</h3>
             <p><strong>Title:</strong> <span id="resultTitle"></span></p>
             <p><strong>URL:</strong> <span id="resultUrl"></span></p>
-            <button class="btn download-btn" id="downloadBtn">📥 Download as Text File</button>
+            <div class="download-buttons">
+                <button class="btn download-btn" id="downloadTxtBtn">📄 Download as Text File</button>
+                <button class="btn download-btn word-btn" id="downloadDocxBtn">📝 Download as Word Document</button>
+            </div>
         </div>
 
         <div class="error" id="error">
@@ -196,13 +259,14 @@
         </div>
 
         <div class="info">
-            <strong>💡 Tips:</strong>
-            <ul style="text-align: left; margin-top: 10px;">
-                <li>Include http:// or https:// in your URL</li>
-                <li>Works with most websites and news articles</li>
-                <li>Content is cleaned and formatted for easy reading</li>
-                <li>If you get a 403 error, try a different website</li>
-                <li>Some sites block automated requests for security</li>
+            <strong>💡 Tips for Best Results:</strong>
+            <ul>
+                <li>Always include <code>http://</code> or <code>https://</code> in your URL</li>
+                <li>Works great with news articles, blogs, and documentation sites</li>
+                <li>Content is automatically cleaned and formatted for easy reading</li>
+                <li>If you get a 403 error, the website blocks automated requests</li>
+                <li>Some JavaScript-heavy sites may not work properly</li>
+                <li>Try different websites if one doesn't work</li>
             </ul>
         </div>
     </div>
@@ -239,9 +303,13 @@
                     document.getElementById('resultUrl').textContent = data.url;
                     result.style.display = 'block';
                     
-                    // Set up download button
-                    document.getElementById('downloadBtn').onclick = function() {
-                        window.location.href = `/download/${data.filename}`;
+                    // Set up download buttons
+                    document.getElementById('downloadTxtBtn').onclick = function() {
+                        window.location.href = `/download/${data.txt_filename}`;
+                    };
+                    
+                    document.getElementById('downloadDocxBtn').onclick = function() {
+                        window.location.href = `/download/${data.docx_filename}`;
                     };
                 } else {
                     document.getElementById('errorMessage').textContent = data.error;
